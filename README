@@ -18,15 +18,68 @@ Windows:
 
 Running P2Pool:
 -------------------------
-To use P2Pool, you must be running your own local bitcoind. For standard
-configurations, using P2Pool should be as simple as:
+Vertcoin (VTC) P2Pool setup guide
+Configuring the Vertcoin daemon
+After you installed verctoind/vertcoin-qt/"Vertcoin Core" you will need to enable the RPC server. To do so add the following text to your vertcoin.conf file:
 
-    cd lyra2re-hash-python
-    git submodule init
-    git submodule update
-    sudo python setup.py install
-    cd ../
-    python run_p2pool.py --net vertcoin
+server=1
+rpcuser=user
+rpcpassword=YourSuperGreatPasswordNumber_DO_NOT_USE_THIS_OR_YOU_WILL_GET_ROBBED_385593
+The vertcoin.conf file can be found in the data directory (datadir):
+
+Operating System	Default datadir	Typical path to configuration file
+Windows	%APPDATA%\Vertcoin\	C:\Users\username\AppData\Roaming\Vertcoin\vertcoin.conf
+Linux	$HOME/.Vertcoin/	/home/username/.Vertcoin/vertcoin.conf
+Mac OSX	$HOME/Library/Application Support/Vertcoin/	/Users/username/Library/Application Support/Vertcoin/vertcoin.conf
+If it is not there simply create it yourself. Restart the Vertcoin daemon after you edited vertcoin.conf.
+
+Running P2Pool
+On Windows you can obtain compiled binaries here. Extract the zip archive and open a command prompt (to do so right-click inside the extracted folder while pressing shift and click on Open command window here). Type run_p2pool.exe --net vertcoin and hit enter.
+
+On Linux you will need to follow the instructions on running from source.
+
+P2Pool will start downloading the share chain and you will be able to connect to it with stratum+tcp://localhost:9171. Use your Vertcoin address as username and any password.
+
+P2Pool's web interface with statistics can be found on http://localhost:9171/ .
+
+Additional options are documented here.
+
+Running from source
+Requirements
+Terminal commands are provided for Ubuntu/Debian. Start with sudo su.
+
+Requirement	Terminal command			Notes
+Git		apt-get install git	
+Python 2	apt-get install python python-pip	
+
+On Windows check the options to install PIP and to add Python to the PATH variable.
+pip install pypiwin32 On Windows
+
+Clone P2Pool
+Open a terminal window and navigate to where you want to download P2Pool. Type:
+
+git clone https://github.com/vertcoin/p2pool-vtc.git
+cd p2pool-vtc
+pip install -r requirements.txt
+Compile the Lyra2REv2 module
+You will need to compile the Lyra2REv2 module. On Windows you will need to install Visual Studio for the C++ compiler. Type:
+
+SET VS90COMNTOOLS=%VS150COMNTOOLS% For Visual C++ 2017 only
+SET VS90COMNTOOLS=%VS140COMNTOOLS% For Visual C++ 2015 only
+SET VS90COMNTOOLS=%VS120COMNTOOLS% For Visual C++ 2013 only
+SET VS90COMNTOOLS=%VS110COMNTOOLS% For Visual C++ 2012 only
+SET VS90COMNTOOLS=%VS100COMNTOOLS% For Visual C++ 2010 only
+"%VS90COMNTOOLS%\vsvars32.bat" For all versions of Visual C++
+
+cd lyra2re-hash-python
+git submodule init
+git submodule update
+sudo python setup.py install On Linux
+python setup.py build --compile=msvc install On Windows
+cd ..
+
+Run P2Pool
+Type python run_p2pool.py --net vertcoin.
 
 Then run your miner program, connecting to 127.0.0.1 on port 9171 with any
 username and password.
